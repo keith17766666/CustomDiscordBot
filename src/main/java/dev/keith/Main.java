@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         System.out.println(new File("src/main/java/dev/keith/token.txt").getAbsolutePath());
-        try(Scanner scanner = new Scanner(new File("src/main/java/dev/keith/token.txt"))) {
+        try(Scanner scanner = new Scanner(new File("token.txt"))) {
             DiscordBot.startBot(scanner.nextLine());
         } catch (FileNotFoundException e) {
             System.out.println("No token is provided!");

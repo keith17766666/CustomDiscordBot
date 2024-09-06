@@ -1,9 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="DiscordBot" type="Application" factoryName="Application" nameIsGenerated="true">
-    <envs>
-      <env name="TOKEN" value="MTI3OTc3Njg1MDk4OTgwOTcyNA.GFaPOj.qCS0wFHhEDekjgZj0PK3rxck_Nk83fJ8tQtcOo" />
-    </envs>
-    <option name="MAIN_CLASS_NAME" value="dev.keith.bots.DiscordBot" />
+  <configuration default="false" name="Main" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="dev.keith.Main" />
     <module name="CustomDiscordBot.main" />
     <extension name="coverage">
       <pattern>
