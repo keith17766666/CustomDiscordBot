@@ -18,6 +18,6 @@ public class DiscordBot {
                 .addEventListeners(new JDAListener())
                 .setActivity(Activity.of(Activity.ActivityType.PLAYING, "Use /help to get help menu!"))
                 .build();
-        LOGGER.info("Invite Link: " + JDA.getInviteUrl(Permission.ADMINISTRATOR));
+        LOGGER.info("Invite Link: " + JDA.getInviteUrl(Permission.ADMINISTRATOR).replace("scope=bot", "scope=bot+applications.commands"));
     }
 }

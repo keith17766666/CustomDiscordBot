@@ -56,6 +56,11 @@ public class JDAListener extends ListenerAdapter {
                 event.getHook().sendMessage("Current Ping: " + JDA.getGatewayPing() + " (ms)").queue();
                 break;
             }
+            case "invite": {
+                event.deferReply().queue();
+                event.getHook().sendMessage(JDA.getInviteUrl(Permission.ADMINISTRATOR).replace("scope=bot", "scope=bot+applications.commands")).queue();
+                break;
+            }
             case "role": {
                 event.deferReply().queue();
                 Button button = Button.primary(event.getOption("role").getAsRole().getId(), "Get Role");
@@ -71,6 +76,7 @@ public class JDAListener extends ListenerAdapter {
                 event.getHook().sendMessage(message)
                         .addActionRow(button)
                         .queue();
+                break;
             }
             case "mute": {
                 event.deferReply().queue();
@@ -92,6 +98,30 @@ public class JDAListener extends ListenerAdapter {
                     );
                 }
                 event.getHook().sendMessage("Member " + member.getUser().getName() + " has been timeout.").queue();
+                break;
+            }
+            case "kick": {
+                event.deferReply().queue();
+
+                Member member = event.getOption("member").getAsMember();
+                boolean isNotified = event.getOption("notified").getAsBoolean();
+
+                member.kick().queue();
+
+                if (isNotified) {
+                    member.getUser().openPrivateChannel()
+                            .queue(privateChannel -> privateChannel.sendMessage(
+                                            "You have been kicked out in Server: " +
+                                                    event.getGuild().getName() +
+                                                    " by Mod / Admin " +
+                                                    event.getUser().getName() +
+                                                    ".")
+                                    .queue()
+                            );
+                }
+
+                event.getHook().sendMessage("Member " + member.getUser().getName() + " has been kicked.").queue();
+                break;
             }
         }
     }
@@ -133,15 +163,22 @@ public class JDAListener extends ListenerAdapter {
                         .addOption(OptionType.STRING, "content", "The message content which bot will say.", true),
                 Commands.slash("help", "Get the helping menu."),
                 Commands.slash("ping", "Get the Bot ping"),
+                Commands.slash("invite", "Get the invite link."),
                 Commands.slash("role", "Send a message. When one reaction it, ones get a role")
                         .addOption(OptionType.ROLE, "role", "The role that added to one.", true)
                         .addOption(OptionType.STRING, "message", "The String of message.")
                         .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.MANAGE_ROLES, Permission.ADMINISTRATOR)),
-                Commands.slash("mute", "Timeout(muting) someone")
+                Commands.slash("mute", "Timeout(muting) someone.")
                         .addOption(OptionType.MENTIONABLE, "member", "The member that you want to timeout", true)
                         .addOption(OptionType.INTEGER, "time", "The time you want to timeout him. (minutes)", true)
                         .addOption(OptionType.BOOLEAN, "notified", "Notified the member that you timeout?", true)
                         .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.MANAGE_PERMISSIONS, Permission.ADMINISTRATOR))
+                        .setGuildOnly(true),
+                Commands.slash("kick", "Kick someone.")
+                        .addOption(OptionType.MENTIONABLE, "member", "The member that you want to kick", true)
+                        .addOption(OptionType.BOOLEAN, "notified", "Notified the member that you kick?", true)
+                        .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.MANAGE_PERMISSIONS, Permission.ADMINISTRATOR))
+                        .setGuildOnly(true)
         ).queue();
     }
 
